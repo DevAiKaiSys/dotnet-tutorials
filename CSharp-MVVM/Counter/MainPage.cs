@@ -10,8 +10,10 @@ public sealed partial class MainPage : Page
                           .VerticalAlignment(VerticalAlignment.Center)
                           .HorizontalAlignment(HorizontalAlignment.Center)
                           .Children(
-                              new TextBlock()
-                                  .Text("Hello Uno Platform!")
+                              new Image()
+                                  .Width(150)
+                                  .Height(150)
+                                  .Source("ms-appx:///Assets/logo.png")
                           )
                   );
     }
