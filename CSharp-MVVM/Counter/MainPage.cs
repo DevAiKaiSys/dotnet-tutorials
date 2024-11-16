@@ -6,7 +6,8 @@ public sealed partial class MainPage : Page
 {
     public MainPage()
     {
-        this.Background(ThemeResource.Get<Brush>("ApplicationPageBackgroundThemeBrush"))
+        this.DataContext(new MainViewModel(), (page, vm) => page
+            .Background(ThemeResource.Get<Brush>("ApplicationPageBackgroundThemeBrush"))
             .Content(
                 new StackPanel()
                     .VerticalAlignment(VerticalAlignment.Center)
@@ -22,17 +23,19 @@ public sealed partial class MainPage : Page
                             .HorizontalAlignment(HorizontalAlignment.Center)
                             .TextAlignment(XamlTextAlignment.Center)
                             .PlaceholderText("Step Size")
-                            .Text("1"),
+                            .Text(x => x.Binding(() => vm.Step).TwoWay()),
                         new TextBlock()
                             .Margin(12)
                             .HorizontalAlignment(HorizontalAlignment.Center)
                             .TextAlignment(XamlTextAlignment.Center)
-                            .Text("Counter: 1"),
+                            .Text(() => vm.Count, txt => $"Counter: {txt}"),
                         new Button()
                             .Margin(12)
                             .HorizontalAlignment(HorizontalAlignment.Center)
+                            .Command(() => vm.IncrementCommand)
                             .Content("Increment Counter by Step Size")
                     )
-            );
+            )
+        );
     }
 }
