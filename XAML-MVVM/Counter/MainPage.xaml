@@ -5,6 +5,10 @@
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <StackPanel HorizontalAlignment="Center"
                 VerticalAlignment="Center">
+        <Image Width="150"
+               Height="150"
+               Source="Assets/logo.png" />
+
         <TextBlock AutomationProperties.AutomationId="HelloTextBlock"
                    Text="Hello Uno Platform"
                    HorizontalAlignment="Center" />
