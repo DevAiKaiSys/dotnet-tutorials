@@ -11,7 +11,7 @@ internal record Countable(int Count, int Step)
     }
 }
 
-internal record MainModel
+internal partial record MainModel
 {
     public IState<Countable> Countable => State.Value(this, () => new Countable(0, 1));
 
