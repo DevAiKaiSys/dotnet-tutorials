@@ -3,6 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:Counter"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <local:MainViewModel />
+    </Page.DataContext>
     <StackPanel VerticalAlignment="Center">
         <Image Width="150"
                Height="150"
@@ -13,16 +16,18 @@
         <TextBox Margin="12"
                  HorizontalAlignment="Center"
                  PlaceholderText="Step Size"
-                 Text="1"
+                 Text="{Binding Step, Mode=TwoWay}"
                  TextAlignment="Center" />
 
         <TextBlock Margin="12"
                    HorizontalAlignment="Center"
-                   TextAlignment="Center"
-                   Text="Counter: 1" />
+                   TextAlignment="Center">
+        <Run Text="Counter: " /><Run Text="{Binding Count}" />
+        </TextBlock>
 
         <Button Margin="12"
                 HorizontalAlignment="Center"
+                Command="{Binding IncrementCommand}"
                 Content="Increment Counter by Step Size" />
     </StackPanel>
 </Page>
