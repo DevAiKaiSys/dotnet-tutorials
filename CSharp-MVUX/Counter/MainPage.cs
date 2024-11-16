@@ -4,14 +4,16 @@ public sealed partial class MainPage : Page
 {
     public MainPage()
     {
-        this
+        _ = this
             .Background(ThemeResource.Get<Brush>("ApplicationPageBackgroundThemeBrush"))
-            .Content(new StackPanel()
-            .VerticalAlignment(VerticalAlignment.Center)
-            .HorizontalAlignment(HorizontalAlignment.Center)
-            .Children(
-                new TextBlock()
-                    .Text("Hello Uno Platform!")
-            ));
+            .Content(
+                new StackPanel()
+                    .VerticalAlignment(VerticalAlignment.Center)
+                    .HorizontalAlignment(HorizontalAlignment.Center)
+                    .Children(
+                        new TextBlock()
+                            .Text("Hello Uno Platform!")
+                    )
+            );
     }
 }
