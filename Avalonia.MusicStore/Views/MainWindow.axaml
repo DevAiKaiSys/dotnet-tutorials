@@ -21,5 +21,10 @@
                     MaterialOpacity="0.65" />
             </ExperimentalAcrylicBorder.Material>
         </ExperimentalAcrylicBorder>
+
+        <Panel Margin="40">
+            <Button Content="Buy Music"
+                    HorizontalAlignment="Right" VerticalAlignment="Top" />
+        </Panel>
     </Panel>
 </Window>
