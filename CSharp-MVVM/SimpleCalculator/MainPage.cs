@@ -1,36 +1,41 @@
+using BrushBuilder = System.Action<Uno.Extensions.Markup.IDependencyPropertyBuilder<Microsoft.UI.Xaml.Media.Brush>>;
+
 namespace SimpleCalculator;
 
 public sealed partial class MainPage : Page
 {
     public MainPage()
     {
-        this.DataContext(new MainViewModel(), (page, vm) => page
-            .Resources(r => r
-                .Add(AppIcons.Dark)
-                .Add(AppIcons.Light))
-            .Background(Theme.Brushes.Background.Default)
-            .Content(
-                new Border()
-                    .SafeArea(SafeArea.InsetMask.VisibleBounds)
-                    .Background(Theme.Brushes.Secondary.Container.Default)
-                    .Child
-                    (
-                        new Grid()
-                            .RowDefinitions<Grid>("Auto,*,Auto,Auto")
-                            .MaxWidth(700)
-                            .VerticalAlignment(VerticalAlignment.Stretch)
-                            .Children
-                            (
-                                Header(vm),
-                                Output(vm),
-                                Keypad(vm)
-                            )
-                    )
-            )
+        this.DataContext(new MainViewModel(this.GetThemeService()), (page, vm)
+            => page
+                .Resources(r => r
+                    .Add(AppIcons.Dark)
+                    .Add(AppIcons.Light)
+                )
+                .Background(Theme.Brushes.Background.Default)
+                .Content
+                (
+                    new Border()
+                        .Background(Theme.Brushes.Secondary.Container.Default)
+                        .SafeArea(SafeArea.InsetMask.VisibleBounds)
+                        .Child
+                        (
+                            new Grid()
+                                .RowDefinitions<Grid>("Auto,*,Auto,Auto")
+                                .MaxWidth(700)
+                                .VerticalAlignment(VerticalAlignment.Stretch)
+                                .Children
+                                (
+                                    Header(vm),
+                                    Output(vm),
+                                    KeyPad(vm)
+                                )
+                        )
+                )
         );
     }
 
-    private static UIElement Header(MainViewModel vm)
+    private ToggleButton Header(MainViewModel vm)
     {
         return new ToggleButton()
             .Grid(row: 0)
@@ -38,7 +43,7 @@ public sealed partial class MainPage : Page
             .CornerRadius(20)
             .VerticalAlignment(VerticalAlignment.Top)
             .HorizontalAlignment(HorizontalAlignment.Center)
-            .Background(Theme.Brushes.Secondary.Container.Default)
+            .Background(Theme.Brushes.Surface.Default)
             .Style(Theme.ToggleButton.Styles.Icon)
             .IsChecked(x => x.Binding(() => vm.IsDark).TwoWay())
             .Content
@@ -55,7 +60,7 @@ public sealed partial class MainPage : Page
             );
     }
 
-    private static UIElement Output(MainViewModel vm)
+    private StackPanel Output(MainViewModel vm)
     {
         return new StackPanel()
             .Grid(row: 2)
@@ -64,20 +69,30 @@ public sealed partial class MainPage : Page
             .HorizontalAlignment(HorizontalAlignment.Stretch)
             .Children
             (
-                new TextBlock()
-                    .Text(() => vm.Calculator.Equation)
-                    .HorizontalAlignment(HorizontalAlignment.Right)
-                    .Foreground(Theme.Brushes.OnSecondary.Container.Default)
-                    .Style(Theme.TextBlock.Styles.DisplaySmall),
-                new TextBlock()
-                    .Text(() => vm.Calculator.Output)
-                    .HorizontalAlignment(HorizontalAlignment.Right)
-                    .Foreground(Theme.Brushes.OnBackground.Default)
-                    .Style(Theme.TextBlock.Styles.DisplayLarge)
+                Equation(vm),
+                Result(vm)
             );
     }
 
-    private static UIElement Keypad(MainViewModel vm)
+    private TextBlock Equation(MainViewModel vm)
+    {
+        return new TextBlock()
+            .Text(() => vm.Calculator.Equation)
+            .HorizontalAlignment(HorizontalAlignment.Right)
+            .Foreground(Theme.Brushes.OnSecondary.Container.Default)
+            .Style(Theme.TextBlock.Styles.DisplaySmall);
+    }
+
+    private TextBlock Result(MainViewModel vm)
+    {
+        return new TextBlock()
+            .Text(() => vm.Calculator.Output)
+            .HorizontalAlignment(HorizontalAlignment.Right)
+            .Foreground(Theme.Brushes.OnBackground.Default)
+            .Style(Theme.TextBlock.Styles.DisplayLarge);
+    }
+
+    private Grid KeyPad(MainViewModel vm)
     {
         return new Grid()
             .Grid(row: 3)
@@ -121,7 +136,7 @@ public sealed partial class MainPage : Page
             );
     }
 
-    private static Button KeyPadButton(
+    private Button KeyPadButton(
         MainViewModel vm,
         int gridRow,
         int gridColumn,
@@ -141,7 +156,7 @@ public sealed partial class MainPage : Page
             .Style(Theme.Button.Styles.Elevated);
     }
 
-    private static Button KeyPadPrimaryButton(
+    private Button KeyPadPrimaryButton(
         MainViewModel vm,
         int gridRow,
         int gridColumn,
@@ -160,12 +175,12 @@ public sealed partial class MainPage : Page
             .Style(Theme.Button.Styles.Filled);
     }
 
-    private static Button KeyPadSecondaryButton(
+    private Button KeyPadSecondaryButton(
         MainViewModel vm,
         int gridRow,
         int gridColumn,
         object content,
-        Action<IDependencyPropertyBuilder<Brush>>? background = null,
+        BrushBuilder? background = null,
         string? parameter = null)
     {
         return new Button()
