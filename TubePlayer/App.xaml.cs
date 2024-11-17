@@ -46,11 +46,26 @@ public partial class App : Application
                     services.AddSingleton(new JsonSerializerOptions
                         { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
                 })
+                .UseHttp((context, services) =>
+                {
+                    services.AddRefitClientWithEndpoint<IYoutubeEndpoint, YoutubeEndpointOptions>(
+                        context,
+                        configure: (clientBuilder, options) => clientBuilder
+                            .ConfigureHttpClient(httpClient =>
+                            {
+                                httpClient.BaseAddress = new Uri(options!.Url!);
+                                httpClient.DefaultRequestHeaders.Add("x-goog-api-key", options.ApiKey);
+                            }));
+                })
                 .ConfigureServices((context, services) =>
                 {
                     // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
+#if USE_MOCKS
                     services.AddSingleton<IYoutubeService, YoutubeServiceMock>();
+#else
+                    services.AddSingleton<IYoutubeService, YoutubeService>();
+#endif
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
