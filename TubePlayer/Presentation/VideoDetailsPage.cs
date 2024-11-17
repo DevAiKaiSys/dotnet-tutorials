@@ -5,7 +5,7 @@ public partial class VideoDetailsPage : Page
     public VideoDetailsPage()
     {
         this.DataContext<VideoDetailsViewModel>((page, vm) => page
-            .Background(Theme.Brushes.OnSurface.Default)
+            .Background(Theme.Brushes.Background.Default)
             .NavigationCacheMode(NavigationCacheMode.Required)
             .StatusBar
             (
@@ -23,19 +23,20 @@ public partial class VideoDetailsPage : Page
             (
                 new AutoLayout()
                     .Background(Theme.Brushes.Background.Default)
-                    .CounterAxisAlignment(AutoLayoutAlignment.Center)
                     .Children
                     (
                         new AutoLayout()
-                            .CounterAxisAlignment(AutoLayoutAlignment.Start)
                             .Width(400)
-                            .AutoLayout(primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
+                            .AutoLayout
+                            (
+                                AutoLayoutAlignment.Center,
+                                primaryAlignment: AutoLayoutPrimaryAlignment.Stretch
+                            )
                             .Children
                             (
                                 new NavigationBar()
                                     .HorizontalContentAlignment(HorizontalAlignment.Left)
                                     .Content("Video")
-                                    .AutoLayout(AutoLayoutAlignment.Stretch)
                                     .MainCommand
                                     (
                                         new AppBarButton()
@@ -50,24 +51,24 @@ public partial class VideoDetailsPage : Page
                                     .AreTransportControlsEnabled(true)
                                     .Width(400)
                                     .Height(300)
+                                    .AutoLayout(AutoLayoutAlignment.Start)
                                     .TransportControls
                                     (
                                         new MediaTransportControls()
                                             .IsCompact(true)
                                     ),
                                 new ScrollViewer()
-                                    .Width(400)
                                     .AutoLayout(primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
                                     .Content
                                     (
                                         new AutoLayout()
-                                            .CounterAxisAlignment(AutoLayoutAlignment.Start)
                                             .Children
                                             (
                                                 new AutoLayout()
                                                     .Spacing(6)
                                                     .Padding(16)
                                                     .Width(400)
+                                                    .AutoLayout(AutoLayoutAlignment.Start)
                                                     .Children
                                                     (
                                                         new TextBlock()
@@ -82,16 +83,17 @@ public partial class VideoDetailsPage : Page
                                                     ),
                                                 new AutoLayout()
                                                     .Spacing(8)
-                                                    .CounterAxisAlignment(AutoLayoutAlignment.Center)
                                                     .Orientation(Orientation.Horizontal)
                                                     .Padding(16, 8)
                                                     .Width(400)
+                                                    .AutoLayout(AutoLayoutAlignment.Start)
                                                     .Children
                                                     (
                                                         new Border()
                                                             .Width(40)
                                                             .Height(40)
                                                             .CornerRadius(20)
+                                                            .AutoLayout(AutoLayoutAlignment.Center)
                                                             .Child
                                                             (
                                                                 new Image()
@@ -103,29 +105,35 @@ public partial class VideoDetailsPage : Page
                                                         new AutoLayout()
                                                             .Spacing(2)
                                                             .PrimaryAxisAlignment(AutoLayoutAlignment.Center)
-                                                            .CounterAxisAlignment(AutoLayoutAlignment.Start)
                                                             .Height(37)
-                                                            .AutoLayout(
-                                                                primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
+                                                            .AutoLayout
+                                                            (
+                                                                AutoLayoutAlignment.Center,
+                                                                primaryAlignment: AutoLayoutPrimaryAlignment.Stretch
+                                                            )
                                                             .Children
                                                             (
                                                                 new AutoLayout()
-                                                                    .CounterAxisAlignment(AutoLayoutAlignment.Start)
                                                                     .Orientation(Orientation.Horizontal)
-                                                                    .AutoLayout(
+                                                                    .AutoLayout
+                                                                    (
+                                                                        AutoLayoutAlignment.Start,
                                                                         primaryAlignment: AutoLayoutPrimaryAlignment
-                                                                            .Stretch)
+                                                                            .Stretch
+                                                                    )
                                                                     .Children
                                                                     (
                                                                         new TextBlock()
                                                                             .Text(() => vm.Video
                                                                                 .FormattedSubscriberCount)
                                                                             .Foreground(Theme.Brushes.OnSurface.Medium)
+                                                                            .AutoLayout(AutoLayoutAlignment.Start)
                                                                     ),
                                                                 new TextBlock()
                                                                     .Text(() => vm.Video.Channel.Snippet?.Title)
                                                                     .Foreground(Theme.Brushes.OnSurface.Default)
                                                                     .Style(Theme.TextBlock.Styles.TitleMedium)
+                                                                    .AutoLayout(AutoLayoutAlignment.Start)
                                                             )
                                                     ),
                                                 new TextBlock()
@@ -134,12 +142,10 @@ public partial class VideoDetailsPage : Page
                                                     .Margin(16)
                                                     .Foreground(Theme.Brushes.OnSurface.Variant.Default)
                                                     .Style(Theme.TextBlock.Styles.BodySmall)
-                                                    .AutoLayout(AutoLayoutAlignment.Stretch)
+                                                    .AutoLayout(AutoLayoutAlignment.Start)
                                             )
                                     )
                             )
-                    )
-            )
-        );
+                    )));
     }
 }

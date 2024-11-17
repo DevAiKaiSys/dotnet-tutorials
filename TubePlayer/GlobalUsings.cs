@@ -9,6 +9,7 @@ global using ApplicationExecutionState = Windows.ApplicationModel.Activation.App
 global using Color = Windows.UI.Color;
 global using System.Text.Json;
 global using TubePlayer.Business;
+global using TubePlayer.Business.Models;
 global using TubePlayer.Services.Models;
 using Uno.Extensions.Reactive.Config;
 
