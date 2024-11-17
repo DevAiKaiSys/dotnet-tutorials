@@ -4,33 +4,33 @@ public sealed partial class MainPage : Page
 {
     public MainPage()
     {
-        this.Resources(r => r
+        this.DataContext(new MainViewModel(), (page, vm) => page
+            .Resources(r => r
                 .Add(AppIcons.Dark)
                 .Add(AppIcons.Light))
             .Background(Theme.Brushes.Background.Default)
-            .DataContext(new TempDataContext(), (page, vm) => page
-                .Content(
-                    new Border()
-                        .SafeArea(SafeArea.InsetMask.VisibleBounds)
-                        .Background(Theme.Brushes.Secondary.Container.Default)
-                        .Child
-                        (
-                            new Grid()
-                                .RowDefinitions<Grid>("Auto,*,Auto,Auto")
-                                .MaxWidth(700)
-                                .VerticalAlignment(VerticalAlignment.Stretch)
-                                .Children
-                                (
-                                    Header(vm),
-                                    Output(vm),
-                                    Keypad(vm)
-                                )
-                        )
-                )
-            );
+            .Content(
+                new Border()
+                    .SafeArea(SafeArea.InsetMask.VisibleBounds)
+                    .Background(Theme.Brushes.Secondary.Container.Default)
+                    .Child
+                    (
+                        new Grid()
+                            .RowDefinitions<Grid>("Auto,*,Auto,Auto")
+                            .MaxWidth(700)
+                            .VerticalAlignment(VerticalAlignment.Stretch)
+                            .Children
+                            (
+                                Header(vm),
+                                Output(vm),
+                                Keypad(vm)
+                            )
+                    )
+            )
+        );
     }
 
-    private static UIElement Header(TempDataContext vm)
+    private static UIElement Header(MainViewModel vm)
     {
         return new ToggleButton()
             .Grid(row: 0)
@@ -55,7 +55,7 @@ public sealed partial class MainPage : Page
             );
     }
 
-    private static UIElement Output(TempDataContext vm)
+    private static UIElement Output(MainViewModel vm)
     {
         return new StackPanel()
             .Grid(row: 2)
@@ -77,7 +77,7 @@ public sealed partial class MainPage : Page
             );
     }
 
-    private static UIElement Keypad(TempDataContext vm)
+    private static UIElement Keypad(MainViewModel vm)
     {
         return new Grid()
             .Grid(row: 3)
@@ -122,7 +122,7 @@ public sealed partial class MainPage : Page
     }
 
     private static Button KeyPadButton(
-        TempDataContext vm,
+        MainViewModel vm,
         int gridRow,
         int gridColumn,
         object content,
@@ -142,7 +142,7 @@ public sealed partial class MainPage : Page
     }
 
     private static Button KeyPadPrimaryButton(
-        TempDataContext vm,
+        MainViewModel vm,
         int gridRow,
         int gridColumn,
         object content,
@@ -161,7 +161,7 @@ public sealed partial class MainPage : Page
     }
 
     private static Button KeyPadSecondaryButton(
-        TempDataContext vm,
+        MainViewModel vm,
         int gridRow,
         int gridColumn,
         object content,
