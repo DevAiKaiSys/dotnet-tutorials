@@ -14,8 +14,14 @@ public class MainWindowViewModel : ViewModelBase
         BuyMusicCommand = ReactiveCommand.CreateFromTask(async () =>
         {
             var store = new MusicStoreViewModel();
+
             var result = await ShowDialog.Handle(store);
-            if (result != null) Albums.Add(result);
+
+            if (result != null)
+            {
+                Albums.Add(result);
+                await result.SaveToDiskAsync();
+            }
         });
     }
 
