@@ -1,21 +1,23 @@
+using TubePlayer.Styles;
 using Uno.Resizetizer;
 
 namespace TubePlayer;
+
 public partial class App : Application
 {
     /// <summary>
-    /// Initializes the singleton application object. This is the first line of authored code
-    /// executed, and as such is the logical equivalent of main() or WinMain().
+    ///     Initializes the singleton application object. This is the first line of authored code
+    ///     executed, and as such is the logical equivalent of main() or WinMain().
     /// </summary>
     public App()
     {
-        this.InitializeComponent();
+        InitializeComponent();
     }
 
     protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
 
-    protected async override void OnLaunched(LaunchActivatedEventArgs args)
+    protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
         // Load WinUI Resources
         Resources.Build(r => r.Merged(
@@ -24,8 +26,8 @@ public partial class App : Application
         // Load Uno.UI.Toolkit and Material Resources
         Resources.Build(r => r.Merged(
             new MaterialToolkitTheme(
-                    new Styles.ColorPaletteOverride(),
-                    new Styles.MaterialFontsOverride())));
+                new ColorPaletteOverride(),
+                new MaterialFontsOverride())));
         var builder = this.CreateBuilder(args)
             // Add navigation support for toolkit controls such as TabBar and NavigationView
             .UseToolkitNavigation()
@@ -39,10 +41,16 @@ public partial class App : Application
                         .EmbeddedSource<App>()
                         .Section<AppConfig>()
                 )
+                .UseSerialization(services =>
+                {
+                    services.AddSingleton(new JsonSerializerOptions
+                        { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+                })
                 .ConfigureServices((context, services) =>
                 {
                     // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
+                    services.AddSingleton<IYoutubeService, YoutubeServiceMock>();
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
@@ -65,11 +73,11 @@ public partial class App : Application
         );
 
         routes.Register(
-            new RouteMap("", View: views.FindByViewModel<ShellModel>(),
+            new RouteMap("", views.FindByViewModel<ShellModel>(),
                 Nested:
                 [
-                    new ("Main", View: views.FindByViewModel<MainModel>(), IsDefault:true),
-                    new ("VideoDetails", View: views.FindByViewModel<VideoDetailsModel>()),
+                    new RouteMap("Main", views.FindByViewModel<MainModel>(), true),
+                    new RouteMap("VideoDetails", views.FindByViewModel<VideoDetailsModel>())
                 ]
             )
         );

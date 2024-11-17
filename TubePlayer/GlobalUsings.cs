@@ -7,4 +7,9 @@ global using TubePlayer.Models;
 global using TubePlayer.Presentation;
 global using ApplicationExecutionState = Windows.ApplicationModel.Activation.ApplicationExecutionState;
 global using Color = Windows.UI.Color;
-[assembly: Uno.Extensions.Reactive.Config.BindableGenerationTool(3)]
+global using System.Text.Json;
+global using TubePlayer.Business;
+global using TubePlayer.Services.Models;
+using Uno.Extensions.Reactive.Config;
+
+[assembly: BindableGenerationTool(3)]
