@@ -10,6 +10,13 @@ public class MusicStoreViewModel : ViewModelBase
 
     private AlbumViewModel? _selectedAlbum;
 
+    public MusicStoreViewModel()
+    {
+        SearchResults.Add(new AlbumViewModel());
+        SearchResults.Add(new AlbumViewModel());
+        SearchResults.Add(new AlbumViewModel());
+    }
+
     public string? SearchText
     {
         get => _searchText;
