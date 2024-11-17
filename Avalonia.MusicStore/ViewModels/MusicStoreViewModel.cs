@@ -10,6 +10,7 @@ namespace Avalonia.MusicStore.ViewModels;
 
 public class MusicStoreViewModel : ViewModelBase
 {
+    private CancellationTokenSource? _cancellationTokenSource;
     private bool _isBusy;
     private string? _searchText;
 
@@ -43,10 +44,14 @@ public class MusicStoreViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _selectedAlbum, value);
     }
 
-    private async void DoSearch(string? s)
+    private async void DoSearch(string s)
     {
         IsBusy = true;
         SearchResults.Clear();
+
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
 
         if (!string.IsNullOrWhiteSpace(s))
         {
@@ -55,8 +60,11 @@ public class MusicStoreViewModel : ViewModelBase
             foreach (var album in albums)
             {
                 var vm = new AlbumViewModel(album);
+
                 SearchResults.Add(vm);
             }
+
+            if (!cancellationToken.IsCancellationRequested) LoadCovers(cancellationToken);
         }
 
         IsBusy = false;
