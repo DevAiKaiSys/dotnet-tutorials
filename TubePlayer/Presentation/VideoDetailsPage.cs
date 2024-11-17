@@ -154,4 +154,11 @@ public partial class VideoDetailsPage : Page
                             )
                     )));
     }
+
+    protected override async void OnNavigatingFrom(NavigatingCancelEventArgs e)
+    {
+        base.OnNavigatingFrom(e);
+
+        youtubePlayer?.MediaPlayer.Pause();
+    }
 }
