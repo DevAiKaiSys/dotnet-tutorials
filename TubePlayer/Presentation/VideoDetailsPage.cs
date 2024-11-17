@@ -1,10 +1,10 @@
 ﻿namespace TubePlayer.Presentation;
 
-public sealed partial class SecondPage : Page
+public sealed partial class VideoDetailsPage : Page
 {
-    public SecondPage()
+    public VideoDetailsPage()
     {
-        this.DataContext<SecondViewModel>((page, vm) => page
+        this.DataContext<VideoDetailsModel>((page, vm) => page
             .Background(Theme.Brushes.Background.Default)
             .Content(new Grid()
                 .SafeArea(SafeArea.InsetMask.VisibleBounds)
