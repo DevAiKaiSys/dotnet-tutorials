@@ -1,6 +1,8 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using Avalonia.MusicStore.Models;
 using ReactiveUI;
 
@@ -58,5 +60,15 @@ public class MusicStoreViewModel : ViewModelBase
         }
 
         IsBusy = false;
+    }
+
+    private async void LoadCovers(CancellationToken cancellationToken)
+    {
+        foreach (var album in SearchResults.ToList())
+        {
+            await album.LoadCover();
+
+            if (cancellationToken.IsCancellationRequested) return;
+        }
     }
 }
