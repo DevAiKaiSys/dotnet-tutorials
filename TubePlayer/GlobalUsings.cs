@@ -11,6 +11,8 @@ global using System.Text.Json;
 global using TubePlayer.Business;
 global using TubePlayer.Business.Models;
 global using TubePlayer.Services.Models;
+global using Refit;
+global using TubePlayer.Services;
 using Uno.Extensions.Reactive.Config;
 
 [assembly: BindableGenerationTool(3)]
