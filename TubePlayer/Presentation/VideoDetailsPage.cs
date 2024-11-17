@@ -2,6 +2,8 @@
 
 public partial class VideoDetailsPage : Page
 {
+    private MediaPlayerElement? youtubePlayer;
+
     public VideoDetailsPage()
     {
         this.DataContext<VideoDetailsViewModel>((page, vm) => page
@@ -48,6 +50,10 @@ public partial class VideoDetailsPage : Page
                                             )
                                     ),
                                 new MediaPlayerElement()
+                                    .Assign(mediaPlayerElement => youtubePlayer = mediaPlayerElement)
+                                    .AutoPlay(true)
+                                    .Source(() => vm.VideoSource)
+                                    .PosterSource(() => vm.Video.Details.Snippet?.Thumbnails?.Medium?.Url!)
                                     .AreTransportControlsEnabled(true)
                                     .Width(400)
                                     .Height(300)
