@@ -1,37 +1,186 @@
-﻿using Microsoft.UI.Text;
-using TubePlayer.Business.Models;
+﻿using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace TubePlayer.Presentation;
 
-public sealed partial class MainPage : Page
+public partial class MainPage : Page
 {
     public MainPage()
     {
-        this.DataContext<MainViewModel>((page, vm) => page
-            .NavigationCacheMode(NavigationCacheMode.Required)
+        this
             .Background(Theme.Brushes.Background.Default)
-            .Content(new Grid()
-                .SafeArea(SafeArea.InsetMask.All)
-                .RowDefinitions("Auto, *")
-                .Children(
-                    new TextBox()
-                        .Text(x => x
-                            .Binding(() => vm.SearchTerm)
-                            .Mode(BindingMode.TwoWay)
-                            .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged))
-                        .PlaceholderText("Search term"),
-                    new ListView()
-                        .Grid(row: 1)
-                        .ItemsSource(() => vm.VideoSearchResults)
-                        .ItemTemplate<YoutubeVideo>(ytv =>
-                            new StackPanel()
-                                .Children(
-                                    new TextBlock()
-                                        .FontWeight(FontWeights.Bold)
-                                        .Text(() =>
-                                            ytv.Details.Snippet?.ChannelTitle),
-                                    new TextBlock()
-                                        .Text(() =>
-                                            ytv.Details.Snippet?.Title))))));
+            .NavigationCacheMode(NavigationCacheMode.Required)
+            .StatusBar
+            (
+                s => s
+                    .Foreground(StatusBarForegroundTheme.Auto)
+                    .Background(Theme.Brushes.Surface.Default)
+            )
+            .Resources
+            (
+                r => r
+                    .Add("Icon_Chevron_Right",
+                        "F1 M 1.4099998474121094 0 L 0 1.4099998474121094 L 4.579999923706055 6 L 0 10.59000015258789 L 1.4099998474121094 12 L 7.409999847412109 6 L 1.4099998474121094 0 Z")
+                    .Add("Icon_Search",
+                        "F1 M 12.5 11 L 11.710000038146973 11 L 11.430000305175781 10.729999542236328 C 12.410000324249268 9.589999556541443 13 8.110000014305115 13 6.5 C 13 2.9100000858306885 10.089999914169312 0 6.5 0 C 2.9100000858306885 0 0 2.9100000858306885 0 6.5 C 0 10.089999914169312 2.9100000858306885 13 6.5 13 C 8.110000014305115 13 9.589999556541443 12.410000324249268 10.729999542236328 11.430000305175781 L 11 11.710000038146973 L 11 12.5 L 16 17.489999771118164 L 17.489999771118164 16 L 12.5 11 L 12.5 11 Z M 6.5 11 C 4.009999990463257 11 2 8.990000009536743 2 6.5 C 2 4.009999990463257 4.009999990463257 2 6.5 2 C 8.990000009536743 2 11 4.009999990463257 11 6.5 C 11 8.990000009536743 8.990000009536743 11 6.5 11 Z")
+            )
+            .Content
+            (
+                new AutoLayout()
+                    .CounterAxisAlignment(AutoLayoutAlignment.Center)
+                    .Children
+                    (
+                        new AutoLayout()
+                            .PrimaryAxisAlignment(AutoLayoutAlignment.Center)
+                            .Width(400)
+                            .AutoLayout(primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
+                            .Children
+                            (
+                                new NavigationBar()
+                                    .Width(400)
+                                    .AutoLayout(AutoLayoutAlignment.Center)
+                                    .Content
+                                    (
+                                        new Image()
+                                            .Source(new BitmapImage(new Uri("https://picsum.photos/384/40")))
+                                            .Stretch(Stretch.UniformToFill)
+                                            .VerticalAlignment(VerticalAlignment.Stretch)
+                                            .HorizontalAlignment(HorizontalAlignment.Stretch)
+                                    ),
+                                new AutoLayout()
+                                    .Background(Theme.Brushes.Surface.Default)
+                                    .CounterAxisAlignment(AutoLayoutAlignment.Start)
+                                    .Padding(12)
+                                    .Children
+                                    (
+                                        new TextBox()
+                                            .Background(Theme.Brushes.Surface.Variant.Default)
+                                            .Text(b => b.Binding("SearchTerm").TwoWay())
+                                            .Height(40)
+                                            .PlaceholderText("Search")
+                                            .CornerRadius(20)
+                                            .BorderThickness(0)
+                                            .AutoLayout(AutoLayoutAlignment.Stretch)
+                                            .ControlExtensions
+                                            (
+                                                icon:
+                                                new PathIcon()
+                                                    .Data(StaticResource.Get<Geometry>("Icon_Search"))
+                                                    .Foreground(Theme.Brushes.OnSurface.Variant.Default)
+                                            )
+                                    ),
+                                new ListView()
+                                    .Background(Theme.Brushes.Background.Default)
+                                    .ItemsSource(b => b.Binding("VideoSearchResults"))
+                                    .Padding(12, 8)
+                                    .Navigation(request: "VideoDetails")
+                                    .AutoLayout(primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
+                                    .ItemTemplate
+                                    (
+                                        () =>
+                                            new CardContentControl()
+                                                .Margin(0, 0, 0, 8)
+                                                .HorizontalAlignment(HorizontalAlignment.Stretch)
+                                                .Style(StaticResource.Get<Style>("ElevatedCardContentControlStyle"))
+                                                .Content
+                                                (
+                                                    new AutoLayout()
+                                                        .Background(Theme.Brushes.Surface.Default)
+                                                        .CornerRadius(12)
+                                                        .PrimaryAxisAlignment(AutoLayoutAlignment.Center)
+                                                        .CounterAxisAlignment(AutoLayoutAlignment.Center)
+                                                        .HorizontalAlignment(HorizontalAlignment.Stretch)
+                                                        .Children
+                                                        (
+                                                            new AutoLayout()
+                                                                .Background(Theme.Brushes.Surface.Default)
+                                                                .CornerRadius(12)
+                                                                .Padding(8, 8, 8, 0)
+                                                                .MaxHeight(288)
+                                                                .MaxWidth(456)
+                                                                .Children
+                                                                (
+                                                                    new Border()
+                                                                        .Height(204.75)
+                                                                        .CornerRadius(6)
+                                                                        .Child
+                                                                        (
+                                                                            new Image()
+                                                                                .Source(b =>
+                                                                                    b.Binding(
+                                                                                        "Details.Snippet.Thumbnails.Medium.Url"))
+                                                                                .Stretch(Stretch.UniformToFill)
+                                                                        ),
+                                                                    new AutoLayout()
+                                                                        .Spacing(8)
+                                                                        .CounterAxisAlignment(
+                                                                            AutoLayoutAlignment.Center)
+                                                                        .Orientation(Orientation.Horizontal)
+                                                                        .Padding(0, 8)
+                                                                        .Children
+                                                                        (
+                                                                            new Border()
+                                                                                .Width(60)
+                                                                                .Height(60)
+                                                                                .CornerRadius(6)
+                                                                                .Child
+                                                                                (
+                                                                                    new Image()
+                                                                                        .Source(b =>
+                                                                                            b.Binding(
+                                                                                                "Channel.Snippet.Thumbnails.Medium.Url"))
+                                                                                        .Stretch(Stretch.UniformToFill)
+                                                                                ),
+                                                                            new AutoLayout()
+                                                                                .PrimaryAxisAlignment(
+                                                                                    AutoLayoutAlignment.Center)
+                                                                                .AutoLayout
+                                                                                (
+                                                                                    AutoLayoutAlignment.Stretch,
+                                                                                    primaryAlignment:
+                                                                                    AutoLayoutPrimaryAlignment.Stretch
+                                                                                )
+                                                                                .Children
+                                                                                (
+                                                                                    new TextBlock()
+                                                                                        .Text(b => b.Binding(
+                                                                                            "Channel.Snippet.Title"))
+                                                                                        .Height(22)
+                                                                                        .Foreground(Theme.Brushes
+                                                                                            .OnSurface.Default)
+                                                                                        .Style(Theme.TextBlock.Styles
+                                                                                            .TitleMedium)
+                                                                                        .AutoLayout(AutoLayoutAlignment
+                                                                                            .Stretch),
+                                                                                    new TextBlock()
+                                                                                        .Text(b => b.Binding(
+                                                                                            "Details.Snippet.Title"))
+                                                                                        .Height(16)
+                                                                                        .Foreground(Theme.Brushes
+                                                                                            .OnSurface.Medium)
+                                                                                        .AutoLayout(AutoLayoutAlignment
+                                                                                            .Stretch)
+                                                                                ),
+                                                                            new Button()
+                                                                                .Foreground(Theme.Brushes.OnSurface
+                                                                                    .Variant.Default)
+                                                                                .Style(Theme.Button.Styles.Icon)
+                                                                                .AutoLayout(AutoLayoutAlignment.Start)
+                                                                                .Content
+                                                                                (
+                                                                                    new PathIcon()
+                                                                                        .Data(StaticResource
+                                                                                            .Get<Geometry>(
+                                                                                                "Icon_Chevron_Right"))
+                                                                                        .Foreground(Theme.Brushes
+                                                                                            .OnSurface.Variant.Default)
+                                                                                )
+                                                                        )
+                                                                )
+                                                        )
+                                                )
+                                    )
+                            )
+                    )
+            );
     }
 }
