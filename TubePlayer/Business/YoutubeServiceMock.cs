@@ -1,5 +1,3 @@
-using TubePlayer.Business.Models;
-
 namespace TubePlayer.Business;
 
 public class YoutubeServiceMock : IYoutubeService
@@ -13,6 +11,11 @@ public class YoutubeServiceMock : IYoutubeService
 
         var channelsData = serializer.FromString<ChannelSearchResultData>(YoutubeServiceMockData.ChannelData)!;
         _channels = channelsData.Items!.ToDictionary(channel => channel.Id!, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public Task<string?> GetVideoSourceUrl(string videoId, CancellationToken ct)
+    {
+        return Task.FromResult<string?>(default);
     }
 
     public Task<YoutubeVideoSet> SearchVideos(string searchQuery, string nextPageToken, uint maxResult,
