@@ -1,4 +1,4 @@
-using TubePlayer.Business.Models;
+using Uno.Extensions.Reactive.Sources;
 
 namespace TubePlayer.Presentation;
 
@@ -8,8 +8,12 @@ public partial record MainModel(IYoutubeService YoutubeService)
 
     public IListFeed<YoutubeVideo> VideoSearchResults => SearchTerm
         .Where(searchTerm => searchTerm is { Length: > 0 })
-        .SelectAsync(async (searchTerm, ct) =>
-            await YoutubeService.SearchVideos(searchTerm, string.Empty, 30, ct))
-        .Select(result => result.Videos)
-        .AsListFeed();
+        .SelectPaginatedByCursorAsync(
+            string.Empty,
+            async (searchTerm, nextPageToken, desiredPageSize, ct) =>
+            {
+                var videoSet = await YoutubeService.SearchVideos(searchTerm, nextPageToken, desiredPageSize ?? 10, ct);
+
+                return new PageResult<string, YoutubeVideo>(videoSet.Videos, videoSet.NextPageToken);
+            });
 }
