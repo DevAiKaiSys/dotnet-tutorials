@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Media.Imaging;
+using TubePlayer.Business.Models;
 
 namespace TubePlayer.Presentation;
 
@@ -6,7 +7,7 @@ public partial class MainPage : Page
 {
     public MainPage()
     {
-        this
+        this.DataContext<MainViewModel>((page, vm) => page
             .Background(Theme.Brushes.Background.Default)
             .NavigationCacheMode(NavigationCacheMode.Required)
             .StatusBar
@@ -54,7 +55,8 @@ public partial class MainPage : Page
                                     (
                                         new TextBox()
                                             .Background(Theme.Brushes.Surface.Variant.Default)
-                                            .Text(b => b.Binding("SearchTerm").TwoWay())
+                                            .Text(b => b.Binding(() => vm.SearchTerm).TwoWay()
+                                                .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged))
                                             .Height(40)
                                             .PlaceholderText("Search")
                                             .CornerRadius(20)
@@ -70,13 +72,13 @@ public partial class MainPage : Page
                                     ),
                                 new ListView()
                                     .Background(Theme.Brushes.Background.Default)
-                                    .ItemsSource(b => b.Binding("VideoSearchResults"))
+                                    .ItemsSource(() => vm.VideoSearchResults)
                                     .Padding(12, 8)
                                     .Navigation(request: "VideoDetails")
                                     .AutoLayout(primaryAlignment: AutoLayoutPrimaryAlignment.Stretch)
-                                    .ItemTemplate
+                                    .ItemTemplate<YoutubeVideo>
                                     (
-                                        () =>
+                                        youtubeVideo =>
                                             new CardContentControl()
                                                 .Margin(0, 0, 0, 8)
                                                 .HorizontalAlignment(HorizontalAlignment.Stretch)
@@ -105,9 +107,9 @@ public partial class MainPage : Page
                                                                         .Child
                                                                         (
                                                                             new Image()
-                                                                                .Source(b =>
-                                                                                    b.Binding(
-                                                                                        "Details.Snippet.Thumbnails.Medium.Url"))
+                                                                                .Source(() =>
+                                                                                    youtubeVideo.Details.Snippet
+                                                                                        ?.Thumbnails?.Medium?.Url!)
                                                                                 .Stretch(Stretch.UniformToFill)
                                                                         ),
                                                                     new AutoLayout()
@@ -125,9 +127,10 @@ public partial class MainPage : Page
                                                                                 .Child
                                                                                 (
                                                                                     new Image()
-                                                                                        .Source(b =>
-                                                                                            b.Binding(
-                                                                                                "Channel.Snippet.Thumbnails.Medium.Url"))
+                                                                                        .Source(() =>
+                                                                                            youtubeVideo.Channel.Snippet
+                                                                                                ?.Thumbnails?.Medium
+                                                                                                ?.Url!)
                                                                                         .Stretch(Stretch.UniformToFill)
                                                                                 ),
                                                                             new AutoLayout()
@@ -142,8 +145,8 @@ public partial class MainPage : Page
                                                                                 .Children
                                                                                 (
                                                                                     new TextBlock()
-                                                                                        .Text(b => b.Binding(
-                                                                                            "Channel.Snippet.Title"))
+                                                                                        .Text(() => youtubeVideo.Channel
+                                                                                            .Snippet?.Title)
                                                                                         .Height(22)
                                                                                         .Foreground(Theme.Brushes
                                                                                             .OnSurface.Default)
@@ -152,8 +155,8 @@ public partial class MainPage : Page
                                                                                         .AutoLayout(AutoLayoutAlignment
                                                                                             .Stretch),
                                                                                     new TextBlock()
-                                                                                        .Text(b => b.Binding(
-                                                                                            "Details.Snippet.Title"))
+                                                                                        .Text(() => youtubeVideo.Details
+                                                                                            .Snippet?.Title)
                                                                                         .Height(16)
                                                                                         .Foreground(Theme.Brushes
                                                                                             .OnSurface.Medium)
@@ -181,6 +184,7 @@ public partial class MainPage : Page
                                     )
                             )
                     )
-            );
+            )
+        );
     }
 }
