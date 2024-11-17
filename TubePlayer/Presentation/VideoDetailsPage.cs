@@ -4,7 +4,7 @@ public partial class VideoDetailsPage : Page
 {
     public VideoDetailsPage()
     {
-        this
+        this.DataContext<VideoDetailsViewModel>((page, vm) => page
             .Background(Theme.Brushes.OnSurface.Default)
             .NavigationCacheMode(NavigationCacheMode.Required)
             .StatusBar
@@ -72,11 +72,11 @@ public partial class VideoDetailsPage : Page
                                                     (
                                                         new TextBlock()
                                                             .TextWrapping(TextWrapping.Wrap)
-                                                            .Text(b => b.Binding("Video.Channel.Snippet.Title"))
+                                                            .Text(() => vm.Video.Channel.Snippet?.Title)
                                                             .Foreground(Theme.Brushes.OnSurface.Default)
                                                             .Style(Theme.TextBlock.Styles.TitleLarge),
                                                         new TextBlock()
-                                                            .Text(b => b.Binding("Video.FormattedStatistics"))
+                                                            .Text(() => vm.Video.FormattedStatistics)
                                                             .Foreground(Theme.Brushes.OnSurface.Medium)
                                                             .AutoLayout(AutoLayoutAlignment.Start)
                                                     ),
@@ -95,9 +95,9 @@ public partial class VideoDetailsPage : Page
                                                             .Child
                                                             (
                                                                 new Image()
-                                                                    .Source(b =>
-                                                                        b.Binding(
-                                                                            "Video.Channel.Snippet.Thumbnails.High.Url"))
+                                                                    .Source(() =>
+                                                                        vm.Video.Channel.Snippet?.Thumbnails?.High
+                                                                            ?.Url!)
                                                                     .Stretch(Stretch.UniformToFill)
                                                             ),
                                                         new AutoLayout()
@@ -118,19 +118,19 @@ public partial class VideoDetailsPage : Page
                                                                     .Children
                                                                     (
                                                                         new TextBlock()
-                                                                            .Text(b => b.Binding(
-                                                                                "Video.FormattedSubscriberCount"))
+                                                                            .Text(() => vm.Video
+                                                                                .FormattedSubscriberCount)
                                                                             .Foreground(Theme.Brushes.OnSurface.Medium)
                                                                     ),
                                                                 new TextBlock()
-                                                                    .Text(b => b.Binding("Video.Channel.Snippet.Title"))
+                                                                    .Text(() => vm.Video.Channel.Snippet?.Title)
                                                                     .Foreground(Theme.Brushes.OnSurface.Default)
                                                                     .Style(Theme.TextBlock.Styles.TitleMedium)
                                                             )
                                                     ),
                                                 new TextBlock()
                                                     .TextWrapping(TextWrapping.Wrap)
-                                                    .Text(b => b.Binding("Video.Channel.Snippet.Description"))
+                                                    .Text(() => vm.Video.Channel.Snippet?.Description)
                                                     .Margin(16)
                                                     .Foreground(Theme.Brushes.OnSurface.Variant.Default)
                                                     .Style(Theme.TextBlock.Styles.BodySmall)
@@ -139,6 +139,7 @@ public partial class VideoDetailsPage : Page
                                     )
                             )
                     )
-            );
+            )
+        );
     }
 }
