@@ -2,8 +2,27 @@ namespace SimpleCalculator;
 
 public partial class MainViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private bool _isDark = false;
+    private readonly IThemeService _themeService;
+
+    public MainViewModel(IThemeService themeService)
+    {
+        _themeService = themeService;
+        IsDark = _themeService.IsDark;
+        _themeService.ThemeChanged += (_, _) => IsDark = _themeService.IsDark;
+    }
+
+    private bool _isDark;
+    public bool IsDark
+    {
+        get => _isDark;
+        set
+        {
+            if (SetProperty(ref _isDark, value))
+            {
+                _ = _themeService.SetThemeAsync(value ? AppTheme.Dark : AppTheme.Light);
+            }
+        }
+    }
 
     [ObservableProperty]
     private Calculator _calculator = new();
