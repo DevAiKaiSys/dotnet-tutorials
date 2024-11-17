@@ -70,6 +70,7 @@ public partial class MainPage : Page
                                         )
                                 ),
                             new ListView()
+                                .IsItemClickEnabled(true)
                                 .Background(Theme.Brushes.Background.Default)
                                 .ItemsSource(() => vm.VideoSearchResults)
                                 .Padding(12, 8)
