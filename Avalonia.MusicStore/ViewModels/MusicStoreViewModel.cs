@@ -2,8 +2,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.MusicStore.Messages;
 using Avalonia.MusicStore.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Avalonia.MusicStore.ViewModels;
 
@@ -56,5 +59,11 @@ public partial class MusicStoreViewModel : ViewModelBase
             await album.LoadCover();
             if (cancellationToken.IsCancellationRequested) return;
         }
+    }
+
+    [RelayCommand]
+    private void BuyMusic()
+    {
+        if (SelectedAlbum != null) WeakReferenceMessenger.Default.Send(new MusicStoreClosedMessage(SelectedAlbum));
     }
 }
