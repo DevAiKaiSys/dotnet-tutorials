@@ -1,18 +1,16 @@
 ﻿using System.Threading.Tasks;
+using Avalonia.MusicStore.Messages;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Avalonia.MusicStore.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public MainWindowViewModel()
-    {
-        // ViewModel initialization logic.
-    }
-
     [RelayCommand]
     private async Task AddAlbumAsync()
     {
-        // Code here will be executed when the button is clicked.
+        // Send the message to the previously registered handler and await the selected album
+        var album = await WeakReferenceMessenger.Default.Send(new PurchaseAlbumMessage());
     }
 }
