@@ -14,6 +14,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task AddAlbumAsync()
     {
         var album = await WeakReferenceMessenger.Default.Send(new PurchaseAlbumMessage());
-        if (album is not null) Albums.Add(album);
+        if (album is not null)
+        {
+            Albums.Add(album);
+            await album.SaveToDiskAsync(); // Add this line
+        }
     }
 }
