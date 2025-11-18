@@ -1,1 +1,12 @@
-GET http://localhost:5133/
+@TodoApi_HostAddress = http://localhost:5133
+
+Post {{TodoApi_HostAddress}}/todos
+Content-Type: application/json
+
+{
+  "name":"walk dog",
+  "dueDate": "2025-11-19T12:00:00Z",
+  "IsCompleted":true
+}
+  
+###
