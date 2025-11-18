@@ -1,7 +1,17 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 var todos = new List<Todo>();
+
+app.MapGet("/todos/{id}", Results<Ok<Todo>, NotFound> (int id) =>
+{
+    var targetTodo = todos.SingleOrDefault(t => id == t.Id);
+    return targetTodo is not null
+        ? TypedResults.Ok(targetTodo)
+        : TypedResults.NotFound();
+});
 
 app.MapPost("/todos", (Todo task) =>
 {

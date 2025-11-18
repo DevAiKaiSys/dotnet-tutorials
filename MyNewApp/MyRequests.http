@@ -10,3 +10,8 @@ Content-Type: application/json
 }
   
 ###
+
+@id=0
+GET {{TodoApi_HostAddress}}/todos/{{id}}
+
+###
