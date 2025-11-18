@@ -23,3 +23,7 @@ GET {{TodoApi_HostAddress}}/todos/
 DELETE {{TodoApi_HostAddress}}/todos/{{id}}
 
 ###
+
+GET {{TodoApi_HostAddress}}/tasks/{{id}}
+
+###
