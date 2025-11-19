@@ -4,6 +4,7 @@ Post {{TodoApi_HostAddress}}/todos
 Content-Type: application/json
 
 {
+  "id": 1,
   "name":"walk dog",
   "dueDate": "2026-11-19T12:00:00Z",
   "isCompleted": false
@@ -11,7 +12,7 @@ Content-Type: application/json
   
 ###
 
-@id=0
+@id=1
 GET {{TodoApi_HostAddress}}/todos/{{id}}
 
 ###
