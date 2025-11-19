@@ -23,6 +23,6 @@ public class UnitTest1
         var result = await TodosApi.GetAllTodos(db);
 
         // Assert: Check for the correct returned type
-        Assert.IsType<Ok<Todo[]>>(result);
+        Assert.IsType<Ok<TodoItemDTO[]>>(result);
     }
 }
