@@ -1,14 +1,15 @@
-using Avalonia.MusicStore.ViewModels;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Avalonia.MusicStore.ViewModels;
 
-namespace Avalonia.MusicStore.Messages;
-
-public class CheckAlbumAlreadyExistsMessage : RequestMessage<bool>
+namespace Avalonia.MusicStore.Messages
 {
-    public CheckAlbumAlreadyExistsMessage(AlbumViewModel album)
+    public class CheckAlbumAlreadyExistsMessage : RequestMessage<bool>
     {
-        Album = album;
-    }
+        public AlbumViewModel Album { get; }
 
-    public AlbumViewModel Album { get; }
+        public CheckAlbumAlreadyExistsMessage(AlbumViewModel album)
+        {
+            Album = album;
+        }
+    }
 }

@@ -3,37 +3,51 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.MusicStore.Messages;
 using Avalonia.MusicStore.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-namespace Avalonia.MusicStore.ViewModels;
-
-public partial class MainViewModel : ViewModelBase
+namespace Avalonia.MusicStore.ViewModels
 {
-    public MainViewModel()
+    public partial class MainViewModel : ObservableObject
     {
-        WeakReferenceMessenger.Default.Register<CheckAlbumAlreadyExistsMessage>(this,
-            (v, m) => { m.Reply(Albums.Contains(m.Album)); });
+        public ObservableCollection<AlbumViewModel> Albums { get; } = new();
 
-        LoadAlbums();
-    }
-
-    public ObservableCollection<AlbumViewModel> Albums { get; } = new();
-
-    [RelayCommand]
-    private async Task AddAlbumAsync()
-    {
-        var album = await WeakReferenceMessenger.Default.Send(new PurchaseAlbumMessage());
-        if (album is not null)
+        public MainViewModel()
         {
-            Albums.Add(album);
-            await album.SaveToDiskAsync(); // Add this line
+            LoadAlbums();
+            
+            WeakReferenceMessenger.Default.Register<CheckAlbumAlreadyExistsMessage>(this, (v, m) =>
+            {
+                m.Reply(Albums.Contains(m.Album));
+            });
         }
-    }
+        
 
-    private async void LoadAlbums()
-    {
-        var albums = (await Album.LoadCachedAsync()).Select(x => new AlbumViewModel(x)).ToList();
-        foreach (var album in albums) Albums.Add(album);
+        /// <summary>
+        /// This relay command send a message to initiate album purchase, adds the result to the collection and saves it to disk.
+        /// </summary>
+        [RelayCommand]
+        private async Task AddAlbumAsync()
+        {
+            var album = await WeakReferenceMessenger.Default.Send(new PurchaseAlbumMessage());
+            if (album is not null)
+            {
+                Albums.Add(album);
+                await album.SaveToDiskAsync();
+            }
+        }
+
+        /// <summary>
+        /// Loads albums and their covers from cache.
+        /// </summary>
+        private async void LoadAlbums()
+        {
+            var albums = (await Album.LoadCachedAsync()).Select(x => new AlbumViewModel(x)).ToList();
+            foreach (var album in albums)
+            {
+                Albums.Add(album);
+            }
+        }
     }
 }
