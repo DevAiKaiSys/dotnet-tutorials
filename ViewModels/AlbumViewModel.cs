@@ -19,9 +19,22 @@ public class AlbumViewModel : ViewModelBase
 
     public Task<Bitmap?> Cover => LoadCoverAsync();
 
-    // this will be implemented later
     private async Task<Bitmap?> LoadCoverAsync()
     {
-        return null;
+        try
+        {
+            // We wait a few ms to demonstrate that the images are loaded in the background.
+            // Remove this line in production.
+            await Task.Delay(200);
+
+            await using (var imageStream = await _album.LoadCoverBitmapAsync())
+            {
+                return await Task.Run(() => Bitmap.DecodeToWidth(imageStream, 400));
+            }
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
