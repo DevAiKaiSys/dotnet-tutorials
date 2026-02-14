@@ -58,4 +58,22 @@ public class AlbumViewModel : ViewModelBase, IEquatable<AlbumViewModel>
     {
         return _album.GetHashCode();
     }
+
+    public async Task SaveToDiskAsync()
+    {
+        await _album.SaveAsync();
+
+        if (await LoadCoverAsync() is Bitmap cover)
+        {
+            var bitmap = Cover;
+
+            await Task.Run(() =>
+            {
+                using (var fs = _album.SaveCoverBitmapStream())
+                {
+                    cover.Save(fs);
+                }
+            });
+        }
+    }
 }
