@@ -1,7 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Avalonia.MusicStore.Messages;
 using Avalonia.MusicStore.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace Avalonia.MusicStore.ViewModels;
 
@@ -14,6 +17,7 @@ public partial class MusicStoreViewModel : ViewModelBase
     public partial bool IsBusy { get; private set; }
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(BuyMusicCommand))]
     public partial AlbumViewModel? SelectedAlbum { get; set; }
 
     public ObservableCollection<AlbumViewModel> SearchResults { get; } = new();
@@ -37,5 +41,23 @@ public partial class MusicStoreViewModel : ViewModelBase
     partial void OnSearchTextChanged(string value)
     {
         _ = DoSearch(SearchText);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanBuyMusic))]
+    private void BuyMusic()
+    {
+        if (SelectedAlbum != null)
+        {
+            var album_exists = WeakReferenceMessenger.Default.Send(new CheckAlbumAlreadyExistsMessage(SelectedAlbum));
+            if (album_exists)
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("This album was already added"));
+            else
+                WeakReferenceMessenger.Default.Send(new MusicStoreClosedMessage(SelectedAlbum));
+        }
+    }
+
+    private bool CanBuyMusic()
+    {
+        return SelectedAlbum != null;
     }
 }
